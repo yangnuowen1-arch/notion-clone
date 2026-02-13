@@ -4,6 +4,7 @@ import { IconPicker } from '@/components/icon-picker'
 import { Button } from '@/components/ui/button'
 import { api } from '@/convex/_generated/api'
 import { Doc } from '@/convex/_generated/dataModel'
+import { useCoverImage } from '@/hooks/use-cover-image'
 import { useMutation } from 'convex/react'
 import { ImageIcon, Smile, X } from 'lucide-react'
 import { ElementRef, useRef, useState } from 'react'
@@ -19,6 +20,8 @@ const Toolbar = ({ initialData, preview }: ToolbarProps) => {
   const [value, setValue] = useState(initialData.title)
   const update = useMutation(api.documents.update)
   const removeIcon = useMutation(api.documents.removeIcon)
+
+  const coverImage = useCoverImage()
 
   // 开启编辑模式并聚焦
   const enableInput = () => {
@@ -110,7 +113,7 @@ const Toolbar = ({ initialData, preview }: ToolbarProps) => {
         {/* 未添加封面且处于编辑模式 - 显示 "Add cover" 按钮 */}
         {!initialData.coverImage && !preview && (
           <Button
-            onClick={() => {}}
+            onClick={coverImage.onOpen}
             className='text-muted-foreground text-xs'
             variant='outline'
             size='sm'
