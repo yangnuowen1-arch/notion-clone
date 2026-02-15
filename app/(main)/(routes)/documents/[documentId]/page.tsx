@@ -2,9 +2,10 @@
 
 import Toolbar from "@/app/(main)/_components/toolbar";
 import Cover from "@/components/cover";
+import { Editor } from "@/components/editor";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { use } from "react";
 
 interface DocumentIdPageProps{
@@ -17,6 +18,15 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
   const document = useQuery(api.documents.getById, {
     documentId
   })
+
+  const update = useMutation(api.documents.update)
+  const onChange = (content: string) => {
+    console.log('onChange triggered:', content)
+    update({
+      id: documentId,
+      content
+    })
+  }
 
   if(document === undefined){
     return (
@@ -39,6 +49,11 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
       <Cover url={document.coverImage} />
       <div className="md:max-w-3xl lg:max-w-4xl mx-auto">
         <Toolbar initialData={document} />
+        <Editor
+          initialContent={document.content}
+          onChange={onChange}
+          editable
+        />
       </div>
     </div>
   );
