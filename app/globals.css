@@ -128,3 +128,24 @@ body,
     @apply bg-background text-foreground;
   }
 }
+
+/* AI Panel streaming cursor */
+@keyframes ai-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* KaTeX overrides for dark mode */
+.dark .katex {
+  color: inherit;
+}
+
+.ai-markdown-body .katex-display {
+  margin: 0.75em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.ai-markdown-body .katex-display > .katex {
+  white-space: normal;
+}

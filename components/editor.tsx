@@ -8,6 +8,7 @@ import '@blocknote/mantine/style.css'
 import { useTheme } from 'next-themes'
 
 import { useEdgeStore } from '@/lib/edgestore'
+import { AIPanel } from '@/components/ai/ai-panel'
 
 interface EditorProps {
   onChange: (value: string) => void
@@ -34,13 +35,16 @@ export const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
     uploadFile: handleUpload,
   })
   return (
-    <BlockNoteView
-      editor={editor}
-      theme={resolvedTheme === 'dark' ? 'dark' : 'light'}
-      editable={editable}
-      onChange={() => {
-        onChange(JSON.stringify(editor.document, null, 2))
-      }}
-    />
+    <div>
+      {editable && <AIPanel editor={editor} />}
+      <BlockNoteView
+        editor={editor}
+        theme={resolvedTheme === 'dark' ? 'dark' : 'light'}
+        editable={editable}
+        onChange={() => {
+          onChange(JSON.stringify(editor.document, null, 2))
+        }}
+      />
+    </div>
   )
 }
