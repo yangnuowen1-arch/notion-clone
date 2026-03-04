@@ -55,7 +55,7 @@ export const SEODrawer = ({ editor, onClose }: SEODrawerProps) => {
           </TabsContent>
 
           <TabsContent value="template" className="mt-0 h-full">
-            <TemplatePanel />
+            <TemplatePanel editor={editor} />
           </TabsContent>
 
           <TabsContent value="link" className="mt-0 h-full">
