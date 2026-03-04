@@ -23,6 +23,8 @@ import { MarkdownRenderer } from './markdown-renderer'
 
 interface AIPanelProps {
   editor: BlockNoteEditor
+  /** 嵌入到 SEODrawer 时传入，隐藏折叠按钮并默认展开 */
+  embedded?: boolean
 }
 
 const AI_MODES: { value: AIMode; label: string; icon: React.ReactNode }[] = [
@@ -33,8 +35,8 @@ const AI_MODES: { value: AIMode; label: string; icon: React.ReactNode }[] = [
   { value: 'translate', label: '翻译', icon: <Languages className="size-4" /> },
 ]
 
-export const AIPanel = ({ editor }: AIPanelProps) => {
-  const [isOpen, setIsOpen] = useState(false)
+export const AIPanel = ({ editor, embedded = false }: AIPanelProps) => {
+  const [isOpen, setIsOpen] = useState(embedded)
   const [selectedMode, setSelectedMode] = useState<AIMode>('polish')
   const [copied, setCopied] = useState(false)
   const outputRef = useRef<HTMLDivElement>(null)
@@ -155,24 +157,26 @@ export const AIPanel = ({ editor }: AIPanelProps) => {
   }
 
   return (
-    <div className="border rounded-lg bg-card shadow-sm mx-auto max-w-2xl my-3">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 py-2.5 border-b">
-        <div className="flex items-center gap-2 text-sm font-medium">
-          <Sparkles className="size-4 text-primary" />
-          AI 写作助手
+    <div className={embedded ? "flex flex-col" : "border rounded-lg bg-card shadow-sm mx-auto max-w-2xl my-3"}>
+      {/* Header - only shown when not embedded (embedded mode uses SEODrawer's own header) */}
+      {!embedded && (
+        <div className="flex items-center justify-between px-4 py-2.5 border-b">
+          <div className="flex items-center gap-2 text-sm font-medium">
+            <Sparkles className="size-4 text-primary" />
+            AI 写作助手
+          </div>
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            onClick={() => {
+              reset()
+              setIsOpen(false)
+            }}
+          >
+            <X className="size-3.5" />
+          </Button>
         </div>
-        <Button
-          variant="ghost"
-          size="icon-xs"
-          onClick={() => {
-            reset()
-            setIsOpen(false)
-          }}
-        >
-          <X className="size-3.5" />
-        </Button>
-      </div>
+      )}
 
       {/* Mode selector */}
       <div className="flex gap-1.5 px-4 py-2.5 border-b flex-wrap">

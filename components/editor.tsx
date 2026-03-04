@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import { BlockNoteEditor, PartialBlock } from '@blocknote/core'
 
 import { useCreateBlockNote } from '@blocknote/react'
@@ -8,18 +9,17 @@ import '@blocknote/mantine/style.css'
 import { useTheme } from 'next-themes'
 
 import { useEdgeStore } from '@/lib/edgestore'
-import { AIPanel } from '@/components/ai/ai-panel'
 
 interface EditorProps {
   onChange: (value: string) => void
   initialContent?: string
   editable?: boolean
+  onEditorReady?: (editor: BlockNoteEditor) => void
 }
 
-export const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
+export const Editor = ({ onChange, initialContent, editable, onEditorReady }: EditorProps) => {
   const { resolvedTheme } = useTheme()
   const { edgestore } = useEdgeStore()
-
 
   const handleUpload = async (file: File) => {
     const response = await edgestore.publicFiles.upload({
@@ -34,17 +34,19 @@ export const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
       : undefined,
     uploadFile: handleUpload,
   })
+
+  useEffect(() => {
+    onEditorReady?.(editor)
+  }, [editor, onEditorReady])
+
   return (
-    <div>
-      {editable && <AIPanel editor={editor} />}
-      <BlockNoteView
-        editor={editor}
-        theme={resolvedTheme === 'dark' ? 'dark' : 'light'}
-        editable={editable}
-        onChange={() => {
-          onChange(JSON.stringify(editor.document, null, 2))
-        }}
-      />
-    </div>
+    <BlockNoteView
+      editor={editor}
+      theme={resolvedTheme === 'dark' ? 'dark' : 'light'}
+      editable={editable}
+      onChange={() => {
+        onChange(JSON.stringify(editor.document, null, 2))
+      }}
+    />
   )
 }
