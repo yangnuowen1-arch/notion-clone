@@ -85,6 +85,13 @@ function computeLengthStats(lengths: number[]) {
   }
 }
 
+// SerpApi 有机结果项结构（见 https://serpapi.com/search-api）
+interface SerpApiOrganicItem {
+  title?: string
+  link?: string
+  snippet?: string
+}
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const keyword = searchParams.get('keyword')?.trim()
@@ -93,35 +100,39 @@ export async function GET(req: NextRequest) {
     return Response.json({ error: 'keyword is required' }, { status: 400 })
   }
 
-  const apiKey = process.env.GOOGLE_CSE_API_KEY
-  const cx = process.env.GOOGLE_CSE_CX
+  const apiKey = process.env.SERPAPI_API_KEY
 
-  if (!apiKey || !cx) {
+  if (!apiKey) {
     return Response.json(
-      { error: 'Google CSE credentials not configured (GOOGLE_CSE_API_KEY, GOOGLE_CSE_CX)' },
+      { error: 'SerpApi 未配置，请设置环境变量 SERPAPI_API_KEY' },
       { status: 503 }
     )
   }
 
-  const searchUrl = new URL('https://www.googleapis.com/customsearch/v1')
-  searchUrl.searchParams.set('key', apiKey)
-  searchUrl.searchParams.set('cx', cx)
+  const searchUrl = new URL('https://serpapi.com/search')
+  searchUrl.searchParams.set('engine', 'google')
   searchUrl.searchParams.set('q', keyword)
+  searchUrl.searchParams.set('api_key', apiKey)
   searchUrl.searchParams.set('num', '10')
 
-  const googleRes = await fetch(searchUrl.toString())
+  const res = await fetch(searchUrl.toString())
 
-  if (!googleRes.ok) {
-    const body = await googleRes.text()
+  if (!res.ok) {
+    const body = await res.text()
     return Response.json(
-      { error: `Google CSE error: ${googleRes.status}`, detail: body },
+      { error: `SerpApi 请求失败: ${res.status}`, detail: body },
       { status: 502 }
     )
   }
 
-  const data = await googleRes.json()
-  const items: Array<{ title?: string; link?: string; snippet?: string }> =
-    data.items ?? []
+  const data = await res.json()
+  if (data.error) {
+    return Response.json(
+      { error: data.error || 'SerpApi 返回错误' },
+      { status: 502 }
+    )
+  }
+  const items: SerpApiOrganicItem[] = (data.organic_results ?? []).slice(0, 10)
 
   const results: SerpResult[] = items.map(item => {
     const title = item.title ?? ''
