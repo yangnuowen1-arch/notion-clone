@@ -13,9 +13,10 @@ import { LinkPanel } from '@/components/seo/link-panel'
 interface SEODrawerProps {
   editor: BlockNoteEditor
   onClose: () => void
+  documentId: string
 }
 
-export const SEODrawer = ({ editor, onClose }: SEODrawerProps) => {
+export const SEODrawer = ({ editor, onClose, documentId }: SEODrawerProps) => {
   return (
     <div className="flex flex-col h-full border-l bg-background">
       {/* Header */}
@@ -59,7 +60,7 @@ export const SEODrawer = ({ editor, onClose }: SEODrawerProps) => {
           </TabsContent>
 
           <TabsContent value="link" className="mt-0 h-full">
-            <LinkPanel />
+            <LinkPanel editor={editor} documentId={documentId} />
           </TabsContent>
 
           <TabsContent value="ai" className="mt-0 px-3 pb-3">

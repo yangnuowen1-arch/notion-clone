@@ -80,6 +80,7 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
           <SEODrawer
             editor={editorInstance}
             onClose={() => setSeoOpen(false)}
+            documentId={documentId}
           />
         </div>
       )}
