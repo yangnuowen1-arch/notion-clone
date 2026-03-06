@@ -1,11 +1,10 @@
 'use client'
 
-import { X, Search, LayoutTemplate, Link2, Sparkles } from 'lucide-react'
+import { X, Search, LayoutTemplate, Link2 } from 'lucide-react'
 import { BlockNoteEditor } from '@blocknote/core'
 
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
-import { AIPanel } from '@/components/ai/ai-panel'
 import { SerpPanel } from '@/components/seo/serp-panel'
 import { TemplatePanel } from '@/components/seo/template-panel'
 import { LinkPanel } from '@/components/seo/link-panel'
@@ -28,9 +27,9 @@ export const SEODrawer = ({ editor, onClose, documentId }: SEODrawerProps) => {
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="ai" className="flex flex-col flex-1 min-h-0">
+      <Tabs defaultValue="serp" className="flex flex-col flex-1 min-h-0">
         <div className="px-3 pt-2 pb-1 shrink-0">
-          <TabsList className="w-full grid grid-cols-4 h-auto p-1">
+          <TabsList className="w-full grid grid-cols-3 h-auto p-1">
             <TabsTrigger value="serp" className="flex flex-col gap-0.5 py-1.5 px-1 text-xs h-auto">
               <Search className="size-3.5" />
               SERP
@@ -42,10 +41,6 @@ export const SEODrawer = ({ editor, onClose, documentId }: SEODrawerProps) => {
             <TabsTrigger value="link" className="flex flex-col gap-0.5 py-1.5 px-1 text-xs h-auto">
               <Link2 className="size-3.5" />
               内链
-            </TabsTrigger>
-            <TabsTrigger value="ai" className="flex flex-col gap-0.5 py-1.5 px-1 text-xs h-auto">
-              <Sparkles className="size-3.5" />
-              AI
             </TabsTrigger>
           </TabsList>
         </div>
@@ -61,10 +56,6 @@ export const SEODrawer = ({ editor, onClose, documentId }: SEODrawerProps) => {
 
           <TabsContent value="link" className="mt-0 h-full">
             <LinkPanel editor={editor} documentId={documentId} />
-          </TabsContent>
-
-          <TabsContent value="ai" className="mt-0 px-3 pb-3">
-            <AIPanel editor={editor} embedded />
           </TabsContent>
         </div>
       </Tabs>
