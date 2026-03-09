@@ -23,6 +23,7 @@
     "@radix-ui/react-slot": "^1.2.4",
     "@radix-ui/react-tabs": "^1.1.13",
     "@types/katex": "^0.16.8",
+    "@xstate/react": "^6.1.0",
     "ai": "^6.0.116",
     "ai-sdk-ollama": "^3.8.0",
     "class-variance-authority": "^0.7.1",
@@ -47,6 +48,7 @@
     "tailwind-merge": "^3.4.0",
     "tiny-tfidf": "^1.0.0",
     "usehooks-ts": "^3.1.1",
+    "xstate": "^5.28.0",
     "zod": "^4.3.6",
     "zustand": "^5.0.11"
   },
